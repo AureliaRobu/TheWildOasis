@@ -1,5 +1,3 @@
-import styled from 'styled-components';
-
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
@@ -15,7 +13,6 @@ function CreateCabinForm() {
   const queryClient = useQueryClient();
   const { register, handleSubmit, reset, getValues, formState } = useForm();
   const { errors } = formState;
-  console.log(errors);
   const { mutate, isLoading: isCreating } = useMutation({
     mutationFn: createCabin,
     onSuccess: () => {
@@ -26,7 +23,8 @@ function CreateCabinForm() {
     onError: (error) => toast.error(error.message),
   });
   function onSubmit(data) {
-    mutate(data);
+    console.log(data);
+    mutate({ ...data, image: data.image[0] });
   }
   function onError(error) {
     console.log(error);
@@ -101,7 +99,12 @@ function CreateCabinForm() {
       </FormRow>
 
       <FormRow label="Cabin photo" error={errors?.image?.message}>
-        <FileInput id="image" accept="image/*" {...register('image')} />
+        <FileInput
+          id="image"
+          type="file"
+          accept="image/*"
+          {...register('image')}
+        />
       </FormRow>
 
       <FormRow>
